@@ -2,17 +2,17 @@
 
 require 'function.php';
 
+/*
 if (true)
 {
-	$lat = 25.10335;
-	$lng = 121.522629;
+	$lat = 25.034145;
+	$lng = 121.568559;
 
-/*
-if( $GET["lat"] && $GET["lng"] )
+ */
+if( $_GET["lat"] && $_GET["lng"] )
 {
 	$lat = $GET["lat"];
 	$lng = $GET["lng"];
- */
 
 	$flag = getAddr( $lat, $lng);
 	if ($flag == -2)
@@ -31,6 +31,7 @@ if( $GET["lat"] && $GET["lng"] )
 		$myObj->result = [];
 
         $target = find( $lat, $lng);
+
         $myObj->result[0]->station = $target[0]->sna;
         $myObj->result[0]->num_bike = $target[0]->sbi;
         $myObj->result[1]->station = $target[1]->sna;
@@ -42,6 +43,7 @@ if( $GET["lat"] && $GET["lng"] )
 		$myObj->result = [];
 	}
 
+	header('Content-type: application/json');
 	$output = json_encode($myObj, JSON_UNESCAPED_UNICODE);
 	echo $output;
 }

@@ -25,6 +25,17 @@ function dist( $lat1, $lng1, $lat2, $lng2)
 	return pow(2, ($lat1 - $lat2))+pow(2, ($lng1 - $lng2));
 }
 
+function calcDistance($lat1,$Lang1, $lat2, $Lang2)
+{
+	$r = 6378.137;
+	$b1 = ($r*$lat1/180)*M_PI;
+	$b2 = ($r*$lat2/180)*M_PI;
+	$l1 = ($r*$Lang1/180)*M_PI;
+	$l2 = ($r*$Lang2/180)*M_PI;
+	$e = acos( sin($b1)*sin($b2) + cos($b1)*cos($b2)*cos($l2-$l1) );
+	return round($e, 4);
+}
+
 class targetItem
 {
 	public $id;
@@ -50,18 +61,27 @@ function find( $lat1, $lng1)
 	$targetSets = array();
 	$targetSets[0] = new targetItem();
 	$targetSets[1] = new targetItem();
-	$target = new targetItem();
+	$target1 = new targetItem();
+	$target2 = new targetItem();
 	$count = 0;
 	for ($i = 0; $i < $max; $i++)
 	{
 		if ($bikeObject[$i]->sbi != 0)
 		{
-			$target->id = $i;
-			$target->dist = dist( $lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
-			$target->sna = $bikeObject[$i]->sna;
-			$target->sbi = $bikeObject[$i]->sbi;
-
-			$targetSets[$count] = $target;
+			if ($count == 0)
+			{
+				$target1->id = $i;
+				$target1->dist = calcDistance( $lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
+				$target1->sna = $bikeObject[$i]->sna;
+				$target1->sbi = $bikeObject[$i]->sbi;
+			}
+			else
+			{
+				$target2->id = $i;
+				$target2->dist = calcDistance( $lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
+				$target2->sna = $bikeObject[$i]->sna;
+				$target2->sbi = $bikeObject[$i]->sbi;
+			}
 			$count++;
 		}
 		if ($count == 2)
@@ -74,27 +94,66 @@ function find( $lat1, $lng1)
 	{
 		if ($bikeObject[$i]->sbi != 0)
 		{
-			$tmpDist = dist($lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
-			if ($tmpDist < $targetSets[0]->dist)
+			$tmpDist = calcDistance($lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
+			/*
+		echo $i;
+		echo " ";
+		echo $tmpDist;
+		echo " ";
+		echo $target1->dist;
+		echo " ";
+		echo $target1->dist;
+		echo " ";
+		echo $target2->dist;
+		echo " 
+";
+			 */
+			if ($tmpDist < $target1->dist)
 			{
-				$targetSets[0]->id = $i;
-				$targetSets[0]->dist = $tmpDist;
-				$targetSets[0]->sna = $bikeObject[$i]->sna;
-				$targetSets[0]->sbi = $bikeObject[$i]->sbi;
+				if ($target1->dist < $target2->dist && $i != $target2->id)
+				{
+					$target2->id = $target1->id;
+					$target2->dist = $target1->dist;
+					$target2->sna = $target1->sna;
+					$target2->sbi = $target1->sbi;
+			//		echo "Move 1 ";
+				}
+				/*
+					echo "Save 1 ";
+					echo $tmpDist;
+					echo " ";
+					echo $bikeObject[$i]->sna;
+					echo " 
+";
+				 */
+				$target1->id = $i;
+				$target1->dist = $tmpDist;
+				$target1->sna = $bikeObject[$i]->sna;
+				$target1->sbi = $bikeObject[$i]->sbi;
 			}
 			else 
 			{
-				if ($tmpDist < $targetSets[1]->dist)
+				if ($tmpDist < $target2->dist && $i != $target1->id)
 				{
-					$targetSets[1]->id = $i;
-					$targetSets[1]->dist = $tmpDist;
-					$targetSets[1]->sna = $bikeObject[$i]->sna;
-					$targetSets[1]->sbi = $bikeObject[$i]->sbi;
+/*
+					echo "Save 2 ";
+					echo $tmpDist;
+					echo " ";
+					echo $bikeObject[$i]->sna;
+					echo " 
+";
+*/
+					$target2->id = $i;
+					$target2->dist = $tmpDist;
+					$target2->sna = $bikeObject[$i]->sna;
+					$target2->sbi = $bikeObject[$i]->sbi;
 				}
 			}
 		}
 	}
 
+	$targetSets[0] = $target1;
+	$targetSets[1] = $target2;
 	return $targetSets;
 
 
