@@ -10,12 +10,12 @@ function getAddr( $lat, $lng)
 		return -1;
 	else
 	{
-	$address = $geodata->results[0]->formatted_address;
+		$address = $geodata->results[0]->formatted_address;
 
-	if (stripos($address, "Taipei") != NULL) 
-		return 0;
-	else 
-		return -2;
+		if (stripos($address, "Taipei") != NULL) 
+			return 0;
+		else 
+			return -2;
 	}
 
 }
@@ -29,42 +29,75 @@ class targetItem
 {
 	public $id;
 	public $dist;
+	public $sna;
+	public $sbi;
 }
 
 function find( $lat1, $lng1)
 {
 
-$bikecode = file_get_contents("http://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=ddb80380-f1b3-4f8e-8016-7ed9cba571d5");
-$bikedata = json_decode($bikecode);
+	// Pull ubike data with python
+	$command = escapeshellcmd('python2 getbike.py');
+	$output = shell_exec($command);
 
-$bikeObject = $bikedata->result->results;
-$max = sizeof($bikeObject);
+	$distName = 'data.json';
+	$bikecode = file_get_contents($distName);
+	$bikedata = json_decode($bikecode);
+	$bikeObject = $bikedata->results;
+	$max = sizeof($bikeObject);
 
-// Init output array
-$targetSet = array();
-$target = new targetItem();
-$count = 0;
-for ($i = 0; $i < $max; $i++)
-{
-	if ($bikeObject->sbi != 0)
+	// Init output array
+	$targetSets = array();
+	$targetSets[0] = new targetItem();
+	$targetSets[1] = new targetItem();
+	$target = new targetItem();
+	$count = 0;
+	for ($i = 0; $i < $max; $i++)
 	{
-		$target->id = $i;
-		$dist = dist($lat1, $lng1, $bikeObject->lat, $bikeObject->lng);
+		if ($bikeObject[$i]->sbi != 0)
+		{
+			$target->id = $i;
+			$target->dist = dist( $lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
+			$target->sna = $bikeObject[$i]->sna;
+			$target->sbi = $bikeObject[$i]->sbi;
 
-		$count++;
+			$targetSets[$count] = $target;
+			$count++;
+		}
+		if ($count == 2)
+			break;
+
 	}
-	if ($count == 1)
-		break;
-
-}
 
 
-for ($i = 0; $i < $max; $i++)
-{
+	for ($i = 0; $i < $max; $i++)
+	{
+		if ($bikeObject[$i]->sbi != 0)
+		{
+			$tmpDist = dist($lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
+			if ($tmpDist < $targetSets[0]->dist)
+			{
+				$targetSets[0]->id = $i;
+				$targetSets[0]->dist = $tmpDist;
+				$targetSets[0]->sna = $bikeObject[$i]->sna;
+				$targetSets[0]->sbi = $bikeObject[$i]->sbi;
+			}
+			else 
+			{
+				if ($tmpDist < $targetSets[1]->dist)
+				{
+					$targetSets[1]->id = $i;
+					$targetSets[1]->dist = $tmpDist;
+					$targetSets[1]->sna = $bikeObject[$i]->sna;
+					$targetSets[1]->sbi = $bikeObject[$i]->sbi;
+				}
+			}
+		}
+	}
 
-}
- 
-	
+	return $targetSets;
+
+
 }
 
 ?>
