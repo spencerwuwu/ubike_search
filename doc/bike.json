@@ -1,0 +1,36 @@
+{
+	"_id":"1",
+	"iid":"339",
+	"sv":"0",
+	"sd":"20000101000000",
+	"vtyp":"1",
+	"sno":"0001",
+	"sna":"捷運市政府站(3號出口)",
+	"sip":"10.7.0.11",
+	"tot":"180",
+	"sbi":"0",
+	"sarea":"信義區",
+	"mday":"20151012003926",
+	"lat":"25.0408578889",
+	"lng":"121.567904444",
+	"ar":"忠孝東路/松仁路(東南側)",
+	"sareaen":"Xinyi Dist.",
+	"snaen":"MRT Taipei City Hall Stataion(Exit 3)-2",
+	"aren":"The S.W. side of Road Zhongxiao East Road & Road Chung Yan.",
+	"nbcnt":"0",
+	"bemp":"0",
+	"act":"0"}
+	sno：站點代號
+	sna：場站名稱(中文)
+	tot：場站總停車格
+	sbi：場站目前車輛數量
+	sarea：場站區域(中文)
+	mday：資料更新時間
+	lat：緯度
+	lng：經度
+	ar：地(中文)
+	sareaen：場站區域(英文)
+	snaen：場站名稱(英文)
+	aren：地址(英文)
+	bemp：空位數量
+	act：全站禁用狀態
