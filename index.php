@@ -2,17 +2,17 @@
 
 require 'function.php';
 
+/*
 if (true)
 {
 	$lat = 25.034153 ;
 	$lng = 121.568559;
 
-/*
-if( $_GET["lat"] && $_GET["lng"] )
-{
-	$lat = $GET["lat"];
-	$lng = $GET["lng"];
  */
+if( $_GET['lat'] && $_GET['lng'] )
+{
+	$lat = $GET['lat'];
+	$lng = $GET['lng'];
 
 	$flag = getAddr( $lat, $lng);
 	$myObj = new stdClass;
