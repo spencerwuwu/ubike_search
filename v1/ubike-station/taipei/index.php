@@ -2,17 +2,17 @@
 
 require 'function.php';
 
-/*
 if (true)
 {
-	$lat = 25.034145;
+	$lat = 25.034153 ;
 	$lng = 121.568559;
 
- */
+/*
 if( $_GET["lat"] && $_GET["lng"] )
 {
 	$lat = $GET["lat"];
 	$lng = $GET["lng"];
+ */
 
 	$flag = getAddr( $lat, $lng);
 	$myObj = new stdClass;
@@ -33,10 +33,14 @@ if( $_GET["lat"] && $_GET["lng"] )
 
         $target = find( $lat, $lng);
 
-        $myObj->result[0]->station = $target[0]->sna;
-        $myObj->result[0]->num_bike = $target[0]->sbi;
-        $myObj->result[1]->station = $target[1]->sna;
-        $myObj->result[1]->num_bike = $target[1]->sbi;
+	$good1 = new stdClass;
+	$good1->station = $target[0]->sna;
+	$good1->num_bike = $target[0]->sbi;
+	$good2 = new stdClass;
+	$good2->station = $target[1]->sna;
+	$good2->num_bike = $target[1]->sbi;
+	array_push($myObj->result, $good1);
+	array_push($myObj->result, $good2);
 	}
 	else
 	{
