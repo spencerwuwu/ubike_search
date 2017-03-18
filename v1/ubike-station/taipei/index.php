@@ -2,19 +2,20 @@
 
 require 'function.php';
 
-/*
 if (true)
 {
 	$lat = 25.034145;
 	$lng = 121.568559;
+/*
 
- */
 if( $_GET["lat"] && $_GET["lng"] )
 {
 	$lat = $GET["lat"];
 	$lng = $GET["lng"];
+ */
 
 	$flag = getAddr( $lat, $lng);
+	$myObj = new stdClass;
 	if ($flag == -2)
 	{
 		$myObj->code = -2;
