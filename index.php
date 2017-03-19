@@ -11,8 +11,8 @@ if (true)
  */
 if( $_GET['lat'] && $_GET['lng'] )
 {
-	$lat = $GET['lat'];
-	$lng = $GET['lng'];
+	$lat = $_GET['lat'];
+	$lng = $_GET['lng'];
 
 	$flag = getAddr( $lat, $lng);
 	$myObj = new stdClass;
