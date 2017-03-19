@@ -86,16 +86,6 @@ function find( $lat1, $lng1)
 		array_push($bikeObject, $data);
 	}
 
-	/*
-	print_r($bikeObject);
-	 */
-
-	/*
-	$distName = 'data.json';
-	$bikecode = file_get_contents($distName);
-	$bikedata = json_decode($bikecode);
-	$bikeObject = $bikedata->results;
-	 */
 	$max = sizeof($bikeObject);
 
 	// Init output array
@@ -147,21 +137,6 @@ function find( $lat1, $lng1)
 			if (narrowDist( $lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng))
 			{
 				$tmpDist = calcDistance($lat1, $lng1, $bikeObject[$i]->lat, $bikeObject[$i]->lng);
-			/*
-		echo $i;
-		echo " ";
-		echo $bikeObject[$i]->sna;
-		echo " ";
-		echo $tmpDist;
-		echo " ";
-		echo $target1->dist;
-		echo " ";
-		echo $target1->dist;
-		echo " ";
-		echo $target2->dist;
-		echo " 
-";
-			 */
 				if ($tmpDist < $target1->dist)
 				{
 					if ($target1->dist < $target2->dist && $i != $target2->id)
@@ -170,16 +145,7 @@ function find( $lat1, $lng1)
 						$target2->dist = $target1->dist;
 						$target2->sna = $target1->sna;
 						$target2->sbi = $target1->sbi;
-						//		echo "Move 1 ";
 					}
-				/*
-					echo "Save 1 ";
-					echo $tmpDist;
-					echo " ";
-					echo $bikeObject[$i]->sna;
-					echo " 
-";
-				 */
 					$target1->id = $i;
 					$target1->dist = $tmpDist;
 					$target1->sna = $bikeObject[$i]->sna;
@@ -189,14 +155,6 @@ function find( $lat1, $lng1)
 				{
 					if ($tmpDist < $target2->dist && $i != $target1->id)
 					{
-/*
-					echo "Save 2 ";
-					echo $tmpDist;
-					echo " ";
-					echo $bikeObject[$i]->sna;
-					echo " 
-";
- */
 						$target2->id = $i;
 						$target2->dist = $tmpDist;
 						$target2->sna = $bikeObject[$i]->sna;
@@ -210,7 +168,6 @@ function find( $lat1, $lng1)
 	$targetSets[0] = $target1;
 	$targetSets[1] = $target2;
 	return $targetSets;
-
 
 }
 

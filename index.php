@@ -2,13 +2,6 @@
 
 require 'function.php';
 
-/*
-if (true)
-{
-	$lat = 25.034153 ;
-	$lng = 121.568559;
-
- */
 if( $_GET['lat'] && $_GET['lng'] )
 {
 	$lat = $_GET['lat'];
