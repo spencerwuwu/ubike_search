@@ -1,5 +1,6 @@
 <?php
 
+// Check if the location is valid and is in Taipei
 function getAddr( $lat, $lng)
 {
 	$geocode=file_get_contents("http://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&sensor=false");
@@ -20,6 +21,7 @@ function getAddr( $lat, $lng)
 
 }
 
+// Narrow down targets to both diff in lat and lng < 0.01 to skip some from runnging calcDistance
 function narrowDist($lat1,$lng1, $lat2, $lng2)
 {
 	$dist1 = $lat1 - $lat2;
@@ -29,7 +31,7 @@ function narrowDist($lat1,$lng1, $lat2, $lng2)
 		return true;
 }
 
-
+// Calculate the distance between current location and bike stations
 function calcDistance($lat1,$lng1, $lat2, $lng2)
 {
 	$data = file_get_contents("https://maps.googleapis.com/maps/api/distancematrix/json?origins=$lat1,$lng1&destinations=$lat2,$lng2&mode=walking");
@@ -117,16 +119,13 @@ function find( $lat1, $lng1)
 		}
 		if ($count == 2)
 			break;
-		else if ($count == 0)
-			return -1;
+		else if ($count == 0 && $i == $max-1)
+			return -1;							// All sbi == 0
 		else
 		{
 			$targetSets[0] = $target1;
 			$targetSets[1] = $target1;
 		}
-
-
-
 	}
 
 
