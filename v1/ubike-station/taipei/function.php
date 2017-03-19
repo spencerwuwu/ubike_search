@@ -127,6 +127,15 @@ function find( $lat1, $lng1)
 		}
 		if ($count == 2)
 			break;
+		else if ($count == 0)
+			return -1;
+		else
+		{
+			$targetSets[0] = $target1;
+			$targetSets[1] = $target1;
+		}
+
+
 
 	}
 
